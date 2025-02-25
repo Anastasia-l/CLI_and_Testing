@@ -91,7 +91,7 @@ def main():
     # Parse arguments
     args = parser.parse_args()
 
-    # If no command is provided, show help
+    # If no command is provided, -> help
     if not args.command:
         parser.print_help()
         sys.exit(1)
