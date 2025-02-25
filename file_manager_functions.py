@@ -138,6 +138,6 @@ def analyzing_directory(directory_name):
         full_size += size
         print(f"> - {item} {format_size(size)}")
 
-    print(f"> - Full size of the files: {format_size(full_size)}")
+    print(f"> - Full size: {format_size(full_size)}")
 
     return full_size
