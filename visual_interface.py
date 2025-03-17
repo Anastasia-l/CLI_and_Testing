@@ -62,6 +62,7 @@ def main(page: ft.Page):
         on_click=lambda _: file_picker.pick_files(),
         visible=False,
     )
+
     directory_icon = ft.IconButton(
         icon=ft.icons.FOLDER_OPEN,
         on_click=lambda _: file_picker.get_directory_path(),
@@ -72,6 +73,7 @@ def main(page: ft.Page):
         on_click=lambda _: file_picker.get_directory_path(),
         visible=False,
     )
+
     folder_icon = ft.IconButton(
         icon=ft.icons.FOLDER_OPEN,
         on_click=lambda _: file_picker.get_directory_path(),
