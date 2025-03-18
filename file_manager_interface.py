@@ -4,9 +4,10 @@ import file_manager_functions
 import os
 
 
+# My commands
 def handle_command(args):
     if args.command == "copy":
-        file_manager_functions.copy_file(args.filename, args.directory_name)
+        file_manager_functions.copy_file(args.full_path, args.destination_path)
     elif args.command == "count":
         file_manager_functions.counting_files(args.directory_name)
     elif args.command == "find":
@@ -16,23 +17,23 @@ def handle_command(args):
         date = file_manager_functions.get_file_birthday(args.full_path)
         print(f"Creation date of {args.full_path}: {date}")
     elif args.command == "rename_file_with_date":
-        if not os.path.exists(args.folder_path):
-            print("Sorry, but this file or folder doesn`t exist!")
+        if not os.path.exists(args.full_path):
+            print("Sorry, but this file could not be found!")
             return
-        confirm = input("This will rename your file name! Type 'YES' to continue: ")
-        if confirm.lower() == "yes":
-            file_manager_functions.rename_file_with_date(args.folder_path)
         else:
-            print("Cancelled by user")
+            file_manager_functions.rename_file_with_date(args.full_path)
+    elif args.command == "rename_folder_with_date":
+        if not os.path.exists(args.folder_path):
+            print("Sorry, but this folder doesn`t exist!")
+            return
+        else:
+            file_manager_functions.rename_file_with_date(args.folder_path)
     elif args.command == "rename_files_with_date":
         if not os.path.exists(args.folder_path):
             print("Sorry, but this folder doesn`t exist!")
-
         else:
-            confirm = input("This will rename all the files in your folder! Type 'YES' to continue: ")
-            if confirm.lower() == "yes":
-                file_manager_functions.process_folder(args.folder_path, recursive=args.recursive)
-                print(f"All the files in {args.folder_path} were succesfully renamed!")
+            file_manager_functions.process_folder(args.folder_path, recursive=args.recursive)
+            print(f"All the files in {args.folder_path} were succesfully renamed!")
     elif args.command == "remove":
         file_manager_functions.removing(args.filename, args.directory_name)
     elif args.command == "analyze":
@@ -49,8 +50,8 @@ def main():
 
     # Command: Copy file
     copy_parser = subparsers.add_parser("copy", help="Copy a file to destination")
-    copy_parser.add_argument("filename", help="Full path to the file")
-    copy_parser.add_argument("directory_name", help="Name of the directory where to copy the file to")
+    copy_parser.add_argument("full_path", help="Full path to the file")
+    copy_parser.add_argument("destination_path", help="Name of the directory where to copy the file to")
 
     # Command: Count files in directory
     count_parser = subparsers.add_parser("count", help="Count the number of files in the directory")
@@ -70,11 +71,16 @@ def main():
     date_parser = subparsers.add_parser("creation_date", help="Get the creation date of a file")
     date_parser.add_argument("full_path", help="Full filename to get creation date for")
 
+    # Command Rename file with date
+    rename_file_with_date_parser = subparsers.add_parser("rename_file_with_date",
+                                                         help="Rename file with the creation date at the end of it")
+    rename_file_with_date_parser.add_argument("full_path", help="Full path to the file that you want to be renamed")
+
     # Command: Rename with date for the folder
-    rename_folder_date_parser = subparsers.add_parser("rename_file_with_date",
-                                                      help="Rename your file or folder with the creation date at the end of it")
+    rename_folder_date_parser = subparsers.add_parser("rename_folder_with_date",
+                                                      help="Rename your folder with the creation date at the end of it")
     rename_folder_date_parser.add_argument("folder_path",
-                                           help="Path to the file or the folder that you want to be renamed")
+                                           help="Path to the folder that you want to be renamed")
 
     # Command: Rename with date for the files in the folder recursively
     rename_files_date_parser = subparsers.add_parser("rename_files_with_date",
