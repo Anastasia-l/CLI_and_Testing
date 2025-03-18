@@ -50,7 +50,7 @@ def main():
 
     # Command: Copy file
     copy_parser = subparsers.add_parser("copy", help="Copy a file to destination")
-    copy_parser.add_argument("full_file_path", help="Full path to the file")
+    copy_parser.add_argument("full_path", help="Full path to the file")
     copy_parser.add_argument("destination_path", help="Name of the directory where to copy the file to")
 
     # Command: Count files in directory
@@ -71,11 +71,16 @@ def main():
     date_parser = subparsers.add_parser("creation_date", help="Get the creation date of a file")
     date_parser.add_argument("full_path", help="Full filename to get creation date for")
 
+    # Command Rename file with date
+    rename_file_with_date_parser = subparsers.add_parser("rename_file_with_date",
+                                                         help="Rename file with the creation date at the end of it")
+    rename_file_with_date_parser.add_argument("full_path", help="Full path to the file that you want to be renamed")
+
     # Command: Rename with date for the folder
-    rename_folder_date_parser = subparsers.add_parser("rename_file_with_date",
-                                                      help="Rename your file or folder with the creation date at the end of it")
+    rename_folder_date_parser = subparsers.add_parser("rename_folder_with_date",
+                                                      help="Rename your folder with the creation date at the end of it")
     rename_folder_date_parser.add_argument("folder_path",
-                                           help="Path to the file or the folder that you want to be renamed")
+                                           help="Path to the folder that you want to be renamed")
 
     # Command: Rename with date for the files in the folder recursively
     rename_files_date_parser = subparsers.add_parser("rename_files_with_date",
