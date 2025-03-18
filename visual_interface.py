@@ -29,8 +29,8 @@ def main(page: ft.Page):
         ft.dropdown.Option("remove"),
         ft.dropdown.Option("analyze"),
     ],
-    width=300,
-    )
+                                   width=300,
+                                   )
 
     command_dropdown_container = ft.Container(
         content=command_dropdown,
