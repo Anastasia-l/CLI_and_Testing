@@ -36,7 +36,7 @@ def removing(filename, directory_name):
     else:
         # If there`s no filename provided attempt to delete a directory
         try:
-            os.rmdir(directory_name)
+            shutil.rmtree(directory_name)
             print(f"The directory {directory_name} was successfully deleted!")
         except:
             print("The directory was not discovered or some error!")
