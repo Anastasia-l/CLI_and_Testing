@@ -7,16 +7,14 @@ import file_manager_functions
 
 
 class TestCopyFile(unittest.TestCase):
-    @patch('builtins.input', return_value='/mock/directory')
     @patch('os.path.isfile')
     @patch('shutil.copy2')
-    def test_copy_file_success(self, mock_copy2, mock_isfile, mock_input):
+    def test_copy_file_success(self, mock_copy2, mock_isfile):
         mock_isfile.return_value = True
         file_manager_functions.copy_file('test_file.txt', '/mock/directory')
 
-        mock_isfile.assert_called_with('/mock/directory\\test_file.txt')
-        mock_copy2.assert_called_with('/mock/directory\\test_file.txt', '/mock/directory')
-        mock_input.assert_called_with("Where to copy the file to? ")
+        mock_isfile.assert_called_with('test_file.txt')
+        mock_copy2.assert_called_with('test_file.txt', '/mock/directory')
 
 
 class TestRemovingFunction(unittest.TestCase):
