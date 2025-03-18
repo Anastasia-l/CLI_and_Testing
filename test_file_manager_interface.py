@@ -8,7 +8,7 @@ class TestFileManagerInterface(unittest.TestCase):
 
     @patch("file_manager_functions.copy_file")
     def test_handle_command_copy(self, mock_copy_file):
-        args = argparse.Namespace(command="copy", filename="test.txt", directory_name="test_dir")
+        args = argparse.Namespace(command="copy", full_path="test.txt", destination_path="test_dir")
         handle_command(args)
         mock_copy_file.assert_called_once_with("test.txt", "test_dir")
 
@@ -36,6 +36,22 @@ class TestFileManagerInterface(unittest.TestCase):
         handle_command(args)
         mock_get_file_birthday.assert_called_once_with("full_path_to_test.txt")
 
+    @patch("os.path.exists", return_value=True)
+    @patch("file_manager_functions.rename_file_with_date")
+    def test_renaming_file_with_date(self, mock_rename, mock_exists):
+        args = argparse.Namespace(command="rename_file_with_date", full_path="full_file_path")
+        handle_command(args)
+        mock_rename.assert_called_once_with("full_file_path")
+
+    @patch("os.path.exists", return_value=False)
+    @patch("file_manager_functions.rename_file_with_date")
+    @patch("builtins.print")
+    def test_renaming_file_with_date_no_file(self, mock_print, mock_rename, mock_exists):
+        args = argparse.Namespace(command="rename_file_with_date", full_path="full_file_path")
+        handle_command(args)
+        mock_print.assert_called_once_with("Sorry, but this file could not be found!")
+        mock_rename.assert_not_called()
+
     @patch("os.path.exists", return_value=False)
     @patch("builtins.print")
     def test_folder_does_not_exist(self, mock_print, mock_exists):
@@ -44,27 +60,17 @@ class TestFileManagerInterface(unittest.TestCase):
         mock_print.assert_called_once_with("Sorry, but this folder doesn`t exist!")
 
     @patch("os.path.exists", return_value=True)
-    @patch("builtins.input", return_value='no')
-    @patch("builtins.print")
-    def test_user_cancel_renaming(self, mock_print, mock_input, mock_exists):
-        args = argparse.Namespace(command="rename_folder_with_date", folder_path="test_folder")
-        handle_command(args)
-        mock_print.assert_called_once_with("Cancelled by user")
-
-    @patch("os.path.exists", return_value=True)
-    @patch("builtins.input", return_value="yes")
     @patch("file_manager_functions.rename_file_with_date")
     @patch("builtins.print")
-    def test_renaming_folder_recursively(self, mock_input, mock_exists, mock_print, mock_rename):
+    def test_renaming_folder_recursively(self, mock_exists, mock_print, mock_rename):
         args = argparse.Namespace(command="rename_folder_with_date", folder_path="test_folder")
         handle_command(args)
         mock_rename.assert_called_once_with("test_folder")
 
     @patch("os.path.exists", return_value=True)
     @patch("file_manager_functions.process_folder")
-    @patch("builtins.input", return_value="yes")
     @patch("builtins.print")
-    def test_renaming_all_files_recursively(self, mock_print, mock_input, mock_process_folder, mock_exists):
+    def test_renaming_all_files_recursively(self, mock_print, mock_process_folder, mock_exists):
         args = argparse.Namespace(command="rename_files_with_date", folder_path="test_path", recursive=True)
         handle_command(args)
         mock_process_folder.assert_called_once_with("test_path", recursive=True)
@@ -72,9 +78,8 @@ class TestFileManagerInterface(unittest.TestCase):
 
     @patch("os.path.exists", return_value=True)
     @patch("file_manager_functions.process_folder")
-    @patch("builtins.input", return_value="yes")
     @patch("builtins.print")
-    def test_renaming_all_files_non_recursively(self, mock_print, mock_input, mock_process_folder, mock_exists):
+    def test_renaming_all_files_non_recursively(self, mock_print, mock_process_folder, mock_exists):
         args = argparse.Namespace(command="rename_files_with_date", folder_path="test_path", recursive=False)
         handle_command(args)
         mock_process_folder.assert_called_once_with("test_path", recursive=False)
